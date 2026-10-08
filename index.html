@@ -7,23 +7,38 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram.cc.js"></script>
 </head>
-<body style="background-color: #1e1e1e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial, sans-serif;">
-    <button id="btn" style="padding: 15px 30px; font-size: 18px; background-color: #0088cc; color: white; border: none; border-radius: 8px; cursor: pointer;">Tonton Iklan Sekarang</button>
+<body style="background: #1e1e1e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;">
+
+    <button onclick="tontonIklan()" style="padding: 18px 32px; font-size: 18px; background: #0088cc; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">
+        Tonton Iklan Sekarang
+    </button>
 
     <script>
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
-
-        const adController = window.Adsgram.init({ blockId: "52616" });
-
-        document.getElementById("btn").addEventListener("click", async () => {
-            try {
-                const result = await adController.show();
-                alert("Iklan selesai ditonton!");
-            } catch (err) {
-                alert("Iklan gagal dimuat atau ditutup.");
+        let adController;
+        
+        window.onload = function () {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
             }
-        });
+            // Inisialisasi Adsgram Block ID kamu
+            adController = window.Adsgram.init({ blockId: "52616" });
+        };
+
+        function tontonIklan() {
+            if (!adController) {
+                alert("Iklan belum siap, tunggu sebentar...");
+                return;
+            }
+            
+            adController.show()
+                .then((res) => {
+                    alert("Berhasil! Iklan selesai ditonton.");
+                })
+                .catch((err) => {
+                    alert("Iklan gagal dimuat: " + JSON.stringify(err));
+                });
+        }
     </script>
 </body>
 </html>
