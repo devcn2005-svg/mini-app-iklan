@@ -14,30 +14,28 @@
     </button>
 
     <script>
-        let adController;
-        
         window.onload = function () {
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand();
             }
-            // Inisialisasi Adsgram Block ID kamu
-            adController = window.Adsgram.init({ blockId: "52616" });
         };
 
         function tontonIklan() {
-            if (!adController) {
-                alert("Iklan belum siap, tunggu sebentar...");
-                return;
+            try {
+                // Inisialisasi langsung saat tombol diklik agar selalu fresh
+                const adController = window.Adsgram.init({ blockId: "52616" });
+                
+                adController.show()
+                    .then((res) => {
+                        alert("Berhasil! Iklan selesai ditonton.");
+                    })
+                    .catch((err) => {
+                        alert("Iklan gagal dimuat: " + (err.message || JSON.stringify(err)));
+                    });
+            } catch (e) {
+                alert("Adsgram belum termuat, pastikan koneksi stabil.");
             }
-            
-            adController.show()
-                .then((res) => {
-                    alert("Berhasil! Iklan selesai ditonton.");
-                })
-                .catch((err) => {
-                    alert("Iklan gagal dimuat: " + JSON.stringify(err));
-                });
         }
     </script>
 </body>
