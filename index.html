@@ -11,46 +11,46 @@
     <button id="adBtn" onclick="tontonIklan()" style="padding: 18px 32px; font-size: 18px; background: #0088cc; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">
         Tonton Iklan Sekarang
     </button>
-    <p id="status" style="margin-top: 15px; color: #888; font-size: 14px;"></p>
+    <p id="status" style="margin-top: 15px; color: #888; font-size: 14px; text-align: center; padding: 0 20px;"></p>
 
-    <!-- Memuat skrip Adsgram secara dinamis dengan penanganan error -->
     <script>
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
 
-        let adController = null;
         const statusText = document.getElementById("status");
+        statusText.innerText = "Menghubungkan ke Adsgram...";
 
-        // Muat skrip Adsgram secara otomatis
-        const script = document.createElement('script');
-        script.src = "https://sad.adsgram.ai/js/adsgram.cc.js";
-        script.onload = function() {
-            try {
-                adController = window.Adsgram.init({ blockId: "52857" });
-                statusText.innerText = "Iklan siap ditonton!";
-            } catch (e) {
-                statusText.innerText = "Gagal inisialisasi Adsgram: " + e.message;
-            }
-        };
-        script.onerror = function() {
-            statusText.innerText = "Skrip Adsgram gagal dimuat (Cek blokir iklan/jaringan).";
-        };
-        document.head.appendChild(script);
+        // Memuat skrip dengan cara alternatif
+        (function (window, document) {
+            var script = document.createElement('script');
+            script.src = "https://sad.adsgram.ai/js/adsgram.cc.js?v=" + Date.now();
+            script.async = true;
+            script.onload = function () {
+                statusText.innerText = "Adsgram siap! Siljonal tombol di atas.";
+            };
+            script.onerror = function () {
+                statusText.innerText = "Gagal memuat skrip. Coba matikan AdBlock atau ganti jaringan.";
+            };
+            document.head.appendChild(script);
+        })(window, document);
 
         async function tontonIklan() {
-            if (!adController) {
-                alert("Iklan belum siap atau gagal dimuat oleh sistem.");
+            if (typeof window.Adsgram === 'undefined') {
+                alert("Skrip Adsgram belum termuat. Pastikan tidak menggunakan AdBlock.");
                 return;
             }
 
             try {
-                statusText.innerText = "Memutar iklan...";
+                statusText.innerText = "Memuat iklan...";
+                const adController = window.Adsgram.init({ blockId: "52857" });
                 const result = await adController.show();
-                statusText.innerText = "Iklan selesai!";
+                statusText.innerText = "Iklan selesai ditonton!";
                 alert("Berhasil! Iklan selesai ditonton.");
             } catch (err) {
-                statusText.innerText = "Iklan ditutup atau gagal.";
-                alert("Iklan gagal ditampilkan: " + JSON.stringify(err));
+                statusText.innerText = "Iklan ditutup atau gagal dimuat.";
+                alert("Gagal memutar iklan: " + (err.message || JSON.stringify(err)));
             }
         }
     </script>
