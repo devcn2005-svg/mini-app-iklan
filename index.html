@@ -1,53 +1,55 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ton Earns</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- INI LINK SKRIP ADSGRAM YANG BENAR -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 </head>
 <body style="background: #1e1e1e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;">
 
-    <button id="adBtn" onclick="tontonIklan()" style="padding: 18px 32px; font-size: 18px; background: #0088cc; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">
-        Tonton Iklan Sekarang
+    <button id="adBtn" onclick="watchAd()" style="padding: 18px 32px; font-size: 18px; background: #0088cc; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">
+        Watch Ad Now
     </button>
 
     <script>
         let adController = null;
 
         window.onload = function () {
+            // Inisialisasi Telegram Web App
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand();
             }
 
-            // Inisialisasi controller Adsgram saat halaman dibuka
+            // Inisialisasi Adsgram dengan Block ID milikmu
             if (window.Adsgram) {
                 adController = window.Adsgram.init({ blockId: "52857" });
             }
         };
 
-        function tontonIklan() {
+        function watchAd() {
             if (!adController) {
                 if (window.Adsgram) {
                     adController = window.Adsgram.init({ blockId: "52857" });
                 } else {
-                    alert("Skrip Adsgram belum siap, tunggu sebentar lalu klik lagi.");
+                    alert("Adsgram script not ready, please wait and try again.");
                     return;
                 }
             }
 
             const btn = document.getElementById("adBtn");
-            btn.innerText = "Memuat Iklan...";
+            btn.innerText = "Loading Ad...";
 
             adController.show().then((result) => {
-                btn.innerText = "Tonton Iklan Sekarang";
-                alert("Berhasil! Iklan selesai ditonton.");
+                // Mengirim data kembali ke bot jika iklan sukses ditonton sampai habis
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.sendData("claim_10_coins");
+                }
             }).catch((err) => {
-                btn.innerText = "Tonton Iklan Sekarang";
-                alert("Iklan gagal dimuat atau ditutup.");
+                btn.innerText = "Watch Ad Now";
+                alert("Ad was closed or failed to load.");
             });
         }
     </script>
