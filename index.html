@@ -5,53 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ton Earns</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- INI LINK SKRIP ADSGRAM YANG BENAR -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 </head>
-<body style="background: #1e1e1e; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;">
+<body style="background: #1e1e1e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;">
 
     <button id="adBtn" onclick="tontonIklan()" style="padding: 18px 32px; font-size: 18px; background: #0088cc; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">
         Tonton Iklan Sekarang
     </button>
-    <p id="status" style="margin-top: 15px; color: #888; font-size: 14px; text-align: center; padding: 0 20px;"></p>
 
     <script>
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-        }
+        let adController = null;
 
-        const statusText = document.getElementById("status");
-        statusText.innerText = "Menghubungkan ke Adsgram...";
-
-        // Memuat skrip dengan cara alternatif
-        (function (window, document) {
-            var script = document.createElement('script');
-            script.src = "https://sad.adsgram.ai/js/adsgram.cc.js?v=" + Date.now();
-            script.async = true;
-            script.onload = function () {
-                statusText.innerText = "Adsgram siap! Siljonal tombol di atas.";
-            };
-            script.onerror = function () {
-                statusText.innerText = "Gagal memuat skrip. Coba matikan AdBlock atau ganti jaringan.";
-            };
-            document.head.appendChild(script);
-        })(window, document);
-
-        async function tontonIklan() {
-            if (typeof window.Adsgram === 'undefined') {
-                alert("Skrip Adsgram belum termuat. Pastikan tidak menggunakan AdBlock.");
-                return;
+        window.onload = function () {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
             }
 
-            try {
-                statusText.innerText = "Memuat iklan...";
-                const adController = window.Adsgram.init({ blockId: "52857" });
-                const result = await adController.show();
-                statusText.innerText = "Iklan selesai ditonton!";
+            // Inisialisasi controller Adsgram saat halaman dibuka
+            if (window.Adsgram) {
+                adController = window.Adsgram.init({ blockId: "52857" });
+            }
+        };
+
+        function tontonIklan() {
+            if (!adController) {
+                if (window.Adsgram) {
+                    adController = window.Adsgram.init({ blockId: "52857" });
+                } else {
+                    alert("Skrip Adsgram belum siap, tunggu sebentar lalu klik lagi.");
+                    return;
+                }
+            }
+
+            const btn = document.getElementById("adBtn");
+            btn.innerText = "Memuat Iklan...";
+
+            adController.show().then((result) => {
+                btn.innerText = "Tonton Iklan Sekarang";
                 alert("Berhasil! Iklan selesai ditonton.");
-            } catch (err) {
-                statusText.innerText = "Iklan ditutup atau gagal dimuat.";
-                alert("Gagal memutar iklan: " + (err.message || JSON.stringify(err)));
-            }
+            }).catch((err) => {
+                btn.innerText = "Tonton Iklan Sekarang";
+                alert("Iklan gagal dimuat atau ditutup.");
+            });
         }
     </script>
 </body>
