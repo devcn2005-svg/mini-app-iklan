@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonton Iklan</title>
+    <script src="https://sad.adsgram.ai/js/adsgram.cc.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { background-color: #1e1e1e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        button { padding: 15px 30px; font-size: 18px; background-color: #0088cc; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <button id="btn-iklan">Tonton Iklan Sekarang</button>
+    <script>
+        window.Telegram.WebApp.ready();
+        const AdController = window.Adsgram.init({ blockId: "52616" }); 
+        
+        document.getElementById('btn-iklan').addEventListener('click', () => {
+            AdController.show().then(() => alert("Koin berhasil ditambahkan!")).catch(() => alert("Iklan gagal dimuat."));
+        });
+    </script>
+</body>
+</html>
