@@ -15,24 +15,23 @@
 
     <script>
         let adController = null;
+        
+        const myBlockId = "52850"; 
 
         window.onload = function () {
-            // Inisialisasi Telegram Web App
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand();
             }
-
-            // Inisialisasi Adsgram dengan Block ID milikmu
             if (window.Adsgram) {
-                adController = window.Adsgram.init({ blockId: "52857" });
+                adController = window.Adsgram.init({ blockId: myBlockId });
             }
         };
 
         function watchAd() {
             if (!adController) {
                 if (window.Adsgram) {
-                    adController = window.Adsgram.init({ blockId: "52857" });
+                    adController = window.Adsgram.init({ blockId: myBlockId });
                 } else {
                     alert("Adsgram script not ready, please wait and try again.");
                     return;
@@ -43,7 +42,6 @@
             btn.innerText = "Loading Ad...";
 
             adController.show().then((result) => {
-                // Mengirim data kembali ke bot jika iklan sukses ditonton sampai habis
                 if (window.Telegram && window.Telegram.WebApp) {
                     window.Telegram.WebApp.sendData("claim_10_coins");
                 }
